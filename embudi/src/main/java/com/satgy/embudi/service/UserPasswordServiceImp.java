@@ -57,7 +57,7 @@ public class UserPasswordServiceImp implements UserPasswordServiceI, UserDetails
         if (user != null) {
             String password = Str.getAlfanumericoAleatorio(8);
             String codificada = encoder.encode(password);
-            passwordRepo.setPassword(user.getUserid(), codificada);
+            passwordRepo.setPassword(user.getUserId(), codificada);
 
             String mensaje = "Se ha actualizado la contraseña:\n" + Str.asciiString(13) + password;
             new Email().sendEmail(user.getEmail(), "Reestablecer contraseña", mensaje);
@@ -84,7 +84,7 @@ public class UserPasswordServiceImp implements UserPasswordServiceI, UserDetails
             Authentication a = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), login.getPassword(), new ArrayList<>()));
             if (a.isAuthenticated()) {
                 String codificada = encoder.encode(login.getNewPassword());
-                passwordRepo.setPassword(user.getUserid(), codificada);
+                passwordRepo.setPassword(user.getUserId(), codificada);
                 String mensaje = "Se ha cambiado la contraseña\n" + Str.asciiString(13);
                 new Email().sendEmail(user.getEmail(), "Cambio de contraseña", mensaje);
                 return "ok";
@@ -117,7 +117,7 @@ public class UserPasswordServiceImp implements UserPasswordServiceI, UserDetails
         user = userService.create(user);
 
         UserPassword userPassword = new UserPassword();
-        userPassword.setUserpasswordId(user.getUserid()); // este campo PK no es autogenerado, le pongo el iduser
+        userPassword.setUserPasswordId(user.getUserId()); // este campo PK no es autogenerado, le pongo el iduser
         userPassword.setPassword(encoder.encode(login.getPassword()));
         userPassword.setUser(user);
         return passwordRepo.save(userPassword);

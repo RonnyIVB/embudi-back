@@ -46,7 +46,7 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<User> update(@Valid @RequestBody User user){
-        return (ResponseEntity<User>) service.findById(user.getUserid())
+        return (ResponseEntity<User>) service.findById(user.getUserId())
                 .map(i -> ResponseEntity.status(HttpStatus.CREATED).body(service.update(user)))
                 .orElseGet(()->ResponseEntity.notFound().build());
     }

@@ -21,12 +21,18 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userid;
+    @Column(name = "userid")
+    private Long userId;
 
     @NotNull(message = "Enter the uuid")
     @Size(min = 3, max = 50, message = "The uuid field must be 3 to 50 characters long")
     @Column(columnDefinition = "varchar(50) default ''", name = "uuid", nullable = false, length = 50)
     private String uuid;
+
+    @ManyToOne
+    @NotNull(message = "Please define the rol")
+    @JoinColumn(name = "roleid", nullable = false, referencedColumnName = "roleid", foreignKey=@ForeignKey(name = "FK_User_Role"))
+    private Role role;
 
     @NotNull(message = "Specify if this user is enable")
     @Column(name = "enable", nullable = false)
@@ -55,12 +61,12 @@ public class User implements Serializable {
 
     // -------------------------------------------------- GETTERS AND SETTERS --------------------------------------------------------------------
 
-    public Long getUserid() {
-        return userid;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUserid(Long userid) {
-        this.userid = userid;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public @NotNull(message = "Enter the uuid") @Size(min = 3, max = 50, message = "The uuid field must be 3 to 50 characters long") String getUuid() {

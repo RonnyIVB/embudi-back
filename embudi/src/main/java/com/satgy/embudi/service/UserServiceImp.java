@@ -44,7 +44,7 @@ public class UserServiceImp implements UserServiceI{
     @Override
     @Transactional
     public User create(User user) {
-        if (user.getUserid() == null) {
+        if (user.getUserId() == null) {
             if (user.getEntryDate() == null) user.setEntryDate(new Date());
             if (user.getLastEntryDate() == null) user.setLastEntryDate(new Date());
             UUID userId = UUID.randomUUID();
