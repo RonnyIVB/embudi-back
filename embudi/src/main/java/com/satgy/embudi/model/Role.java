@@ -16,4 +16,27 @@ public class Role implements Serializable {
     @Size(min = 3, max = 25, message = "The role name must be 3 to 25 characters long")
     @Column(name = "rolename", length = 25, nullable = false)
     private String roleName;
+
+    public Role(Long roleId, String roleName) {
+        this.roleId = roleId;
+        this.roleName = roleName;
+    }
+
+    public Role() {}
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
+
+    public @Size(min = 3, max = 25, message = "The role name must be 3 to 25 characters long") String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(@Size(min = 3, max = 25, message = "The role name must be 3 to 25 characters long") String roleName) {
+        this.roleName = roleName;
+    }
 }

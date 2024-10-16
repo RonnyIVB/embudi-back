@@ -9,13 +9,21 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 public class Funciones {
 
-    public static ResponseEntity getResponse(String mensajeError, String detalleError){
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new java.util.Date(), mensajeError, detalleError);
-        return new ResponseEntity(exceptionResponse, HttpStatus.ACCEPTED);
+    /**
+     *
+     * @param errorTitle short text
+     * @param errorMessage can be long
+     * @param status HttpStatus.BAD_REQUEST, HttpStatus.CREATED, etc.
+     * @return a structure kind ResponseEntity
+     */
+    public static ResponseEntity getResponse(String errorTitle, String errorMessage, HttpStatusCode status){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new java.util.Date(), errorTitle, errorMessage);
+        return new ResponseEntity(exceptionResponse, status);
     }
 
     public static boolean abrirWeb(String url){

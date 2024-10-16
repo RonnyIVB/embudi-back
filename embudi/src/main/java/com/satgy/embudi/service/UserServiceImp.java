@@ -2,6 +2,8 @@ package com.satgy.embudi.service;
 
 import com.satgy.embudi.model.User;
 import com.satgy.embudi.repository.UserRepositoryI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,7 @@ import java.util.UUID;
 @Service
 public class UserServiceImp implements UserServiceI{
 
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImp.class);
     @Autowired
     private UserRepositoryI repo;
 
@@ -31,13 +34,13 @@ public class UserServiceImp implements UserServiceI{
 
     @Override
     @Transactional(readOnly = true)
-    public User findByUuid(String uuid){
+    public Optional<User> findByUuid(String uuid){
         return repo.findByUuid(uuid);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public User findByEmail(String email){
+    public Optional<User> findByEmail(String email){
         return repo.findByEmail(email);
     }
 
@@ -57,6 +60,7 @@ public class UserServiceImp implements UserServiceI{
     @Override
     @Transactional
     public User update(User user) {
+        log.info("UserServiceImp.update user: " + user.toString());
         return repo.save(user);
     }
 

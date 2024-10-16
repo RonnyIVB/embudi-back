@@ -7,25 +7,25 @@ import java.util.Map;
 
 public class ExceptionResponse {
     private Date timestamp;
-    private String mensajeError;
-    private String detalleError;
-    private Map <String, String> erroresValidacion; // el primer String es del campo y el segundo del error
+    private String errorTitle;
+    private String errorDetail;
+    private Map <String, String> errors; // el primer String es del campo y el segundo del error
 
     public ExceptionResponse() {
     }
 
-    public ExceptionResponse(Date timestamp, String mensajeError, String detalleError) {
+    public ExceptionResponse(Date timestamp, String errorTitle, String errorDetail) {
         this.timestamp = timestamp;
-        this.mensajeError = mensajeError;
-        this.detalleError = detalleError;
+        this.errorTitle = errorTitle;
+        this.errorDetail = errorDetail;
     }
 
     // este constructor se usa en el caso de que se de un error con validación
-    public ExceptionResponse(Date timestamp, String mensajeError, String detalleError, Map<String, String> erroresValidacion) {
+    public ExceptionResponse(Date timestamp, String errorTitle, String errorDetail, Map<String, String> errors) {
         this.timestamp = timestamp;
-        this.mensajeError = mensajeError;
-        this.detalleError = detalleError;
-        this.erroresValidacion = erroresValidacion;
+        this.errorTitle = errorTitle;
+        this.errorDetail = errorDetail;
+        this.errors = errors;
     }
 
     public Date getTimestamp() {
@@ -36,27 +36,27 @@ public class ExceptionResponse {
         this.timestamp = timestamp;
     }
 
-    public String getMensajeError() {
-        return mensajeError;
+    public String getErrorTitle() {
+        return errorTitle;
     }
 
-    public void setMensajeError(String mensajeError) {
-        this.mensajeError = mensajeError;
+    public void setErrorTitle(String errorTitle) {
+        this.errorTitle = errorTitle;
     }
 
-    public String getDetalleError() {
-        return detalleError;
+    public String getErrorDetail() {
+        return errorDetail;
     }
 
-    public void setDetalleError(String detalleError) {
-        this.detalleError = detalleError;
+    public void setErrorDetail(String errorDetail) {
+        this.errorDetail = errorDetail;
     }
 
-    public Map<String, String> getErroresValidacion() {
-        return erroresValidacion;
+    public Map<String, String> getErrors() {
+        return errors;
     }
 
-    public void setErroresValidacion(Map<String, String> erroresValidacion) {
-        this.erroresValidacion = erroresValidacion;
+    public void setErrors(Map<String, String> errors) {
+        this.errors = errors;
     }
 }

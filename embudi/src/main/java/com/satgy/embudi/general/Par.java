@@ -1,10 +1,16 @@
 package com.satgy.embudi.general;
 
-import com.satgy.embudi.SpringApplicationContext;
-import com.satgy.embudi.general.AppProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 
 public class Par {
+
+    @Autowired
+    private static Environment env;
+
     public static String caracteresEspeciales=".,;:+-_*/'¡!\"·$%&/()=¿?\\ºª|@#~€¬`´^*[]{}¨Çç<>";
+
+    public static final String SIGN_UP_URL = "/api/auth";
 
     public static final String secuenciaArchivo = "secuenciaArchivo.15";
     public static final String localhost="localhost";
@@ -15,55 +21,25 @@ public class Par {
     public static final long EXPIRATION_TIME = 864000000; // 10días, lo uso para calcular el tiempo de expiración del token
     public static final String TOKEN_PREFIX = "Bearer "; // json web token, bearer significa portador
     public static final String HEADER_STRING = "Authorization"; // Es el header por el que se enviará el TOKEN_PREFIX
-    public static final String SIGN_UP_URL = "/api/inicio"; // La URL con la que los usuarios se registrarán en el sistema
 
     // Es una key secreta con la que se generarán los tokens, la generé en la web: randomkeygen.com en la sección "CodeIgniter Encryption Keys"
     //public static final String TOKEN_SECRET = "m2H0EwqfFT41YCT4kBz6ARUaokcvee1N";
-    public static String getToken(){
-        AppProperties propiedades = (AppProperties) SpringApplicationContext.getBean("AppProperties");
-        return propiedades.getTokenSecret();
-    }
 
-    public static String getFormatoFecha(){
-        AppProperties propiedades = (AppProperties) SpringApplicationContext.getBean("AppProperties");
-        return propiedades.getFormatoFecha();
-    }
-    public static String getFormatoHora(){
-        AppProperties propiedades = (AppProperties) SpringApplicationContext.getBean("AppProperties");
-        return propiedades.getFormatoHora();
-    }
-    public static String getFormatoFechaHora(){
-        AppProperties propiedades = (AppProperties) SpringApplicationContext.getBean("AppProperties");
-        return propiedades.getFormatoFecha()+ " " + propiedades.getFormatoHora();
-    }
+    //public static long getJwtExpirationToken() { return Long.parseLong(env.getProperty("jwtexpirationtoken")); }
+    public static long getJwtExpirationToken() { return 864000000; } // miliseconds
+    //public static String getJwtSign() { return env.getProperty("jwtsign"); }
+    public static String getJwtSign() { return "m2H0EwqfFT41YCT4kBz6ARUaokcvee1N"; }
 
-    public static String getDireccionCorreo(){
-        AppProperties propiedades = (AppProperties) SpringApplicationContext.getBean("AppProperties");
-        return propiedades.getDireccionCorreo();
-    }
-    public static String getCorreoAutenticacion(){
-        AppProperties propiedades = (AppProperties) SpringApplicationContext.getBean("AppProperties");
-        return propiedades.getCorreoAutenticacion();
-    }
-    public static String getUsuarioCorreo(){
-        AppProperties propiedades = (AppProperties) SpringApplicationContext.getBean("AppProperties");
-        return propiedades.getUsuarioCorreo();
-    }
-    public static String getClaveCorreo(){
-        AppProperties propiedades = (AppProperties) SpringApplicationContext.getBean("AppProperties");
-        return propiedades.getClaveCorreo();
-    }
-    public static String getDireccionSMTP(){
-        AppProperties propiedades = (AppProperties) SpringApplicationContext.getBean("AppProperties");
-        return propiedades.getDireccionSMTP();
-    }
-    public static String getPuertoSMTP(){
-        AppProperties propiedades = (AppProperties) SpringApplicationContext.getBean("AppProperties");
-        return propiedades.getPuertoSMTP();
-    }
-    public static String getStarttls(){
-        AppProperties propiedades = (AppProperties) SpringApplicationContext.getBean("AppProperties");
-        return propiedades.getStarttls();
-    }
+    public static String getTokenSecret () { return env.getProperty("tokenSecret"); }
+    public static String getFormatoFecha () { return env.getProperty("formatoFecha"); }
+    public static String getFormatoHora () { return env.getProperty("formatoHora"); }
+
+    public static String getDireccionCorreo () { return env.getProperty("direccionCorreo"); }
+    public static String getCorreoAutenticacion () { return env.getProperty("correoAutenticacion"); }
+    public static String getUsuarioCorreo () { return env.getProperty("usuarioCorreo"); }
+    public static String getClaveCorreo () { return env.getProperty("claveCorreo"); }
+    public static String getDireccionSMTP () { return env.getProperty("direccionSMTP"); }
+    public static String getPuertoSMTP () { return env.getProperty("puertoSMTP"); }
+    public static String getStarttls () { return env.getProperty("starttls"); }
 
 }

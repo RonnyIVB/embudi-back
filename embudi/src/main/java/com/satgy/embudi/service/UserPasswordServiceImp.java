@@ -3,33 +3,38 @@ package com.satgy.embudi.service;
 import com.satgy.embudi.dto.Login;
 import com.satgy.embudi.general.Email;
 import com.satgy.embudi.general.Str;
+import com.satgy.embudi.model.Role;
 import com.satgy.embudi.model.User;
 import com.satgy.embudi.model.UserPassword;
+import com.satgy.embudi.repository.RoleRepositoryI;
 import com.satgy.embudi.repository.UserPasswordRepositoryI;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserPasswordServiceImp implements UserPasswordServiceI, UserDetailsService {
 
     @Autowired
     private UserPasswordRepositoryI passwordRepo;
+
+    @Autowired
+    private RoleRepositoryI roleRepo;
 
     @Autowired
     private UserServiceI userService;
@@ -53,23 +58,34 @@ public class UserPasswordServiceImp implements UserPasswordServiceI, UserDetails
 
     @Override
     public String resetPassword(String email) {
-        User user = userService.findByEmail(email.toLowerCase().trim());
-        if (user != null) {
-            String password = Str.getAlfanumericoAleatorio(8);
-            String codificada = encoder.encode(password);
-            passwordRepo.setPassword(user.getUserId(), codificada);
+        return userService.findByEmail(email.toLowerCase().trim())
+                .map(user -> {
+                    String password = Str.getAlfanumericoAleatorio(8);
+                    String codificada = encoder.encode(password);
+                    passwordRepo.setPassword(user.getUserId(), codificada);
 
-            String mensaje = "Se ha actualizado la contraseña:\n" + Str.asciiString(13) + password;
-            new Email().sendEmail(user.getEmail(), "Reestablecer contraseña", mensaje);
-            return "Se ha enviado el email";
-        } else {
-            return "No existe ese email";
-        }
+                    String mensaje = "Se ha actualizado la contraseña:\n" + Str.asciiString(13) + password;
+                    new Email().sendEmail(user.getEmail(), "Reestablecer contraseña", mensaje);
+                    return "Se ha enviado el email";
+                }).orElseGet(()-> "No existe ese email");
+
+//        User user = userService.findByEmail(email.toLowerCase().trim());
+//        if (user != null) {
+//            String password = Str.getAlfanumericoAleatorio(8);
+//            String codificada = encoder.encode(password);
+//            passwordRepo.setPassword(user.getUserId(), codificada);
+//
+//            String mensaje = "Se ha actualizado la contraseña:\n" + Str.asciiString(13) + password;
+//            new Email().sendEmail(user.getEmail(), "Reestablecer contraseña", mensaje);
+//            return "Se ha enviado el email";
+//        } else {
+//            return "No existe ese email";
+//        }
     }
 
     // To be able to inject this class, I must to add the bean in the class WebSecurity
     // public AuthenticationManager authenticationManagerBean()
-    @Autowired
+    /*@Autowired
     @Qualifier("authenticationManager")
     protected AuthenticationManager authenticationManager;
 
@@ -94,7 +110,7 @@ public class UserPasswordServiceImp implements UserPasswordServiceI, UserDetails
         } catch(Exception e) {
             return "La contraseña actual está incorrecta";
         }
-    }
+    }*/
 
     @Override
     public Optional<UserPassword> findById(Long userpasswordId) {
@@ -114,6 +130,8 @@ public class UserPasswordServiceImp implements UserPasswordServiceI, UserDetails
         user.setEnable(true);
         user.setEntryDate(new Date());
         user.setLastEntryDate(new Date());
+        Optional<Role> or = roleRepo.findById(1L); // 1: User
+        user.setRole(or.get());
         user = userService.create(user);
 
         UserPassword userPassword = new UserPassword();
@@ -134,17 +152,23 @@ public class UserPasswordServiceImp implements UserPasswordServiceI, UserDetails
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) {
-        // buscar si existe el email
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        // Search if the email exists
         List<UserPassword> upList = passwordRepo.findByEmail(email);
         //System.out.println("UNO");
         // si no encuentra el email lanzar una excepción
-        if (upList.size() == 0) throw new UsernameNotFoundException(email);
+        if (upList.isEmpty()) throw new UsernameNotFoundException("User not found (" + email + ")");
         //System.out.println("DOS");
 
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        ArrayList credentials = new ArrayList<>();
-        UserPassword uc = upList.get(0); // tomo el primer user
+        Collection<GrantedAuthority> credentials = new ArrayList<>();
+
+        // If You want to get and specify a list of accesses or roles:
+        //List<com.satgy.embudi.model.Role> roles = new ArrayList<>(); // should be a user role list. Example: repoRole.findByUserEmail(email)
+        //java.util.Collection<org.springframework.security.core.GrantedAuthority> credentials2 = roles.stream().map( role -> new org.springframework.security.core.authority.SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toList());
+
+
+        UserPassword uc = upList.getFirst(); // I take the first User, like get(0)
         //User u = new User(email, uc.getPassword(), credentials);
         //System.out.println("u.isEnabled() : " + u.isEnabled());
         //for (GrantedAuthority ga: u.getAuthorities()){

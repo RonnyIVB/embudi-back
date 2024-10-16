@@ -1,5 +1,6 @@
 package com.satgy.embudi.model;
 
+import com.satgy.embudi.general.Str;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -30,7 +31,7 @@ public class User implements Serializable {
     private String uuid;
 
     @ManyToOne
-    @NotNull(message = "Please define the rol")
+    @NotNull(message = "Please define the role")
     @JoinColumn(name = "roleid", nullable = false, referencedColumnName = "roleid", foreignKey=@ForeignKey(name = "FK_User_Role"))
     private Role role;
 
@@ -51,6 +52,10 @@ public class User implements Serializable {
     @Column(name = "email", unique = true, nullable = false, length = 50)
     private String email;
 
+    @Size(min = 0, max = 20, message = "The phone must be to 20 characters long")
+    @Column(name = "phone", nullable = true, length = 20)
+    private String phone;
+
     @Column(name = "entrydate", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date entryDate;
@@ -58,6 +63,44 @@ public class User implements Serializable {
     @Column(name = "lastentrydate", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastEntryDate ;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", uuid='" + uuid + '\'' +
+                ", role=" + role +
+                ", enable=" + enable +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", entryDate=" + entryDate +
+                ", lastEntryDate=" + lastEntryDate +
+                '}';
+    }
+
+    // Calculated fields --------------------------------------------------
+
+    public String getFullName() {
+        if (!Str.esNulo(lastName) && !Str.esNulo(firstName))return (lastName.trim() + " " + firstName.trim()).trim();
+        if (!Str.esNulo(lastName))return lastName.trim();
+        if (!Str.esNulo(firstName))return firstName.trim();
+        return "(Usuario)";
+    }
+
+    public String getShortName() {
+        if (!Str.esNulo(firstName)) return firstName.trim().split(" ")[0];
+        if (!Str.esNulo(lastName)) return lastName.trim().split(" ")[0];
+        return "(Usuario)";
+    }
+
+    public String getNameWithEmail() {
+        //return (lastName + " " + firstName + ". " + email).trim();
+        if (!Str.esNulo(lastName) && !Str.esNulo(firstName))return (lastName + " " + firstName + ". " + email).trim();
+        if (!Str.esNulo(lastName))return (lastName + ". " + email).trim();
+        if (!Str.esNulo(firstName))return (firstName+ ". " + email).trim();
+        return ("(Usuario). " + email).trim();
+    }
 
     // -------------------------------------------------- GETTERS AND SETTERS --------------------------------------------------------------------
 
@@ -75,6 +118,14 @@ public class User implements Serializable {
 
     public void setUuid(@NotNull(message = "Enter the uuid") @Size(min = 3, max = 50, message = "The uuid field must be 3 to 50 characters long") String uuid) {
         this.uuid = uuid;
+    }
+
+    public @NotNull(message = "Please define the rol") Role getRole() {
+        return role;
+    }
+
+    public void setRole(@NotNull(message = "Please define the rol") Role role) {
+        this.role = role;
     }
 
     public @NotNull(message = "Specify if this user is enable") Boolean getEnable() {
@@ -123,5 +174,13 @@ public class User implements Serializable {
 
     public void setLastEntryDate(Date lastEntryDate) {
         this.lastEntryDate = lastEntryDate;
+    }
+
+    public @Size(min = 0, max = 20, message = "The phone must be to 20 characters long") String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(@Size(min = 0, max = 20, message = "The phone must be to 20 characters long") String phone) {
+        this.phone = phone;
     }
 }
