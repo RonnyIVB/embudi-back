@@ -62,7 +62,7 @@ public class User implements Serializable {
 
     @Column(name = "lastentrydate", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date lastEntryDate ;
+    private Date lastEntryDate;
 
     @Override
     public String toString() {

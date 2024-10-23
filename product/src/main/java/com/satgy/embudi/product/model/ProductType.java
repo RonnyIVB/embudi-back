@@ -20,7 +20,7 @@ public class ProductType implements Serializable {
     @Column(name = "producttypeid")
     private Long productTypeId;
 
-    @Size(min = 3, max = 25, message = "The first name must be 3 to 25 characters long")
-    @Column(name = "firstname", length = 25, nullable = true)
-    private String firstName;
+    @Size(min = 3, max = 25, message = "The name must be 3 to 25 characters long")
+    @Column(name = "name", length = 25, nullable = true)
+    private String name;
 }

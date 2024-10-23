@@ -1,7 +1,7 @@
 package com.satgy.embudi.product.model;
 
 public enum ProductOperation {
-    Buy("Buy"),
+    Rent("Rent"),
     Sale("Sale");
 
     public final String label;

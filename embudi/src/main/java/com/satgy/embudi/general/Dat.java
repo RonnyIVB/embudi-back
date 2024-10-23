@@ -4,10 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import javax.swing.JOptionPane;
 
-public class Fechas {
+public class Dat {
 
     final static long MilisegundosPorDia = 24 * 60 * 60 * 1000;
     final static long MilisegundosPorMinuto = 60 * 1000;
@@ -38,10 +36,10 @@ public class Fechas {
         for(int i=0;i<tabla.getRowCount();i++){
             if(!Str.esNulo(tabla.getValueAt(i, columnaFecha))){
                 String fecha=tabla.getValueAt(i, columnaFecha).toString();
-                if(validarFecha(fecha, "MM/yyyy")){fecha=Fechas.toCadena(Fechas.ultimoDiaDeMes(Fechas.toFecha(fecha, "MM/yyyy")), formato);}
-                if(validarFecha(fecha, "MM-yyyy")){fecha=Fechas.toCadena(Fechas.ultimoDiaDeMes(Fechas.toFecha(fecha, "MM-yyyy")), formato);}
-                if(validarFecha(fecha, "yyyy/MM")){fecha=Fechas.toCadena(Fechas.ultimoDiaDeMes(Fechas.toFecha(fecha, "yyyy/MM")), formato);}
-                if(validarFecha(fecha, "yyyy-MM")){fecha=Fechas.toCadena(Fechas.ultimoDiaDeMes(Fechas.toFecha(fecha, "yyyy-MM")), formato);}
+                if(validarFecha(fecha, "MM/yyyy")){fecha= Dat.toCadena(Dat.ultimoDiaDeMes(Dat.toFecha(fecha, "MM/yyyy")), formato);}
+                if(validarFecha(fecha, "MM-yyyy")){fecha= Dat.toCadena(Dat.ultimoDiaDeMes(Dat.toFecha(fecha, "MM-yyyy")), formato);}
+                if(validarFecha(fecha, "yyyy/MM")){fecha= Dat.toCadena(Dat.ultimoDiaDeMes(Dat.toFecha(fecha, "yyyy/MM")), formato);}
+                if(validarFecha(fecha, "yyyy-MM")){fecha= Dat.toCadena(Dat.ultimoDiaDeMes(Dat.toFecha(fecha, "yyyy-MM")), formato);}
                 tabla.setValueAt(fecha, i, columnaFecha);
                 //System.out.println(fecha);
                 if(!validarFecha(fecha, formato)){

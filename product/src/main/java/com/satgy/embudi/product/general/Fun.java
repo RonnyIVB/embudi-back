@@ -1,6 +1,9 @@
-package com.satgy.embudi.general;
+package com.satgy.embudi.product.general;
 
-import com.satgy.embudi.exception.ExceptionResponse;
+import com.satgy.embudi.product.exception.ExceptionResponse;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -8,11 +11,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 
-public class Funciones {
+public class Fun {
 
     /**
      *
@@ -22,7 +22,7 @@ public class Funciones {
      * @return a structure kind ResponseEntity
      */
     public static ResponseEntity getResponse(String errorTitle, String errorMessage, HttpStatusCode status){
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new java.util.Date(), errorTitle, errorMessage);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), errorTitle, errorMessage);
         return new ResponseEntity(exceptionResponse, status);
     }
 
@@ -30,7 +30,7 @@ public class Funciones {
         try {
             return abrirWeb(new java.net.URI(url));
         } catch (java.net.URISyntaxException ex) {
-            Logger.getLogger(Funciones.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Fun.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -158,10 +158,10 @@ public class Funciones {
     public static double[] segmentar(double total, int partes, int decimales, double minimo, double primero){
         if(partes==1){return new double[]{total};}
         double vec[]=new double[partes];
-        double valor=Funciones.redondear(total/partes, decimales);
+        double valor= Fun.redondear(total/partes, decimales);
 
         //hacer esto para q no existen errores por los decimales, en algunos dividendos se sumara o restara un centavo
-        double aux=Funciones.redondear((total-(valor*partes))*Math.pow(10, decimales),0);
+        double aux= Fun.redondear((total-(valor*partes))*Math.pow(10, decimales),0);
         //si por ejemplo aux=-2, quiere decir que en dos partes (cuotas) hay q restar un centavo
         //si fuera aux=4, en 4 partes (cuotas), habria q sumar un centavo
 
@@ -170,16 +170,16 @@ public class Funciones {
 
         if(primero>0){
             // si la 1º cuota puede tener un valor menor al mínimo, poner de una vez, un valor minimo en la 1º
-            vec[0]=Funciones.redondear(primero, decimales);
+            vec[0]= Fun.redondear(primero, decimales);
             i=1;
-            valor=Funciones.redondear((total-primero)/(partes-1), decimales);
-            aux=-1+Funciones.redondear(((total-primero)-(valor*(partes-1)))*100, 0);
+            valor= Fun.redondear((total-primero)/(partes-1), decimales);
+            aux=-1+ Fun.redondear(((total-primero)-(valor*(partes-1)))*100, 0);
         }else if(valor<=minimo){
             // si la 1º cuota puede tener un valor menor al mínimo, poner de una vez, un valor minimo en la 1º
-            vec[0]=Funciones.redondear(minimo, decimales);
+            vec[0]= Fun.redondear(minimo, decimales);
             i=1;
-            valor=Funciones.redondear((total-minimo)/(partes-1), decimales);
-            aux=-1+Funciones.redondear(((total-minimo)-(valor*(partes-1)))*100, 0);
+            valor= Fun.redondear((total-minimo)/(partes-1), decimales);
+            aux=-1+ Fun.redondear(((total-minimo)-(valor*(partes-1)))*100, 0);
         }
 
         int signo=1;
@@ -188,7 +188,7 @@ public class Funciones {
         double aux2=Math.pow(0.1, decimales);//si decimales=2, tomara un valor de 0.01
         for(i=i+0;i<partes;i++){
             if(i>=(int)(aux)){aux2=0;}
-            vec[i]=Funciones.redondear(valor+aux2*signo, decimales);
+            vec[i]= Fun.redondear(valor+aux2*signo, decimales);
         }
         return vec;
     }
@@ -207,7 +207,7 @@ public class Funciones {
             suma+=Double.parseDouble(proporciones.get(i).toString());}
         double sumaParcial=0, numero;
         for(int i=0; i<proporciones.size()-1; i++){//se cuentas todos los elementos menos 1 para que el ultima se calcule con la diferencia de la suma de los anteriores para evitar errores al redondear
-            numero=Funciones.redondear(valor*Double.parseDouble(proporciones.get(i).toString())/suma, decimales);
+            numero= Fun.redondear(valor*Double.parseDouble(proporciones.get(i).toString())/suma, decimales);
             datos.add(numero);
             sumaParcial+=numero;
         }
@@ -225,8 +225,8 @@ public class Funciones {
     public static Date[] segmentar(Date pinicio, Date pfin, int partes){
         if(partes==1) { return new Date[]{pfin}; }
         Date vec[] = new Date[partes];
-        Date inicio = Fechas.soloFecha(pinicio);
-        Date fin=Fechas.soloFecha(pfin);
+        Date inicio = Dat.soloFecha(pinicio);
+        Date fin=Dat.soloFecha(pfin);
 
         Date div=inicio;
         long add=fin.getTime()-inicio.getTime();//diferencia en milisegundos entre las fechas
@@ -241,8 +241,8 @@ public class Funciones {
     public static Date[] segmentar(Date pinicio, Date pfin, int partes, boolean primeracuota){
         if(partes==1){return new Date[]{pfin};}
         Date vec[]=new Date[partes];
-        Date inicio=Fechas.soloFecha(pinicio);
-        Date fin=Fechas.soloFecha(pfin);
+        Date inicio=Dat.soloFecha(pinicio);
+        Date fin=Dat.soloFecha(pfin);
 
         Date div=inicio;
         long add=fin.getTime()-inicio.getTime();//diferencia en milisegundos entre las fechas
@@ -264,10 +264,10 @@ public class Funciones {
     public static String validaNumero(Object num, int decimales, boolean obligatorioDecimal){
         String aux=num.toString();
         aux=aux.replaceAll(" ", "");//quitar todos los espacios
-        if(!Funciones.esCantidad(aux, true)){
-            return Funciones.darDecimal(0, decimales);
+        if(!Fun.esCantidad(aux, true)){
+            return Fun.darDecimal(0, decimales);
         }else if(obligatorioDecimal){
-            return Funciones.darDecimal(aux, decimales);
+            return Fun.darDecimal(aux, decimales);
         }else{
             return noDarDecimal(num, decimales);
         }
@@ -281,7 +281,7 @@ public class Funciones {
     public static String validaEnteroPositivo(Object num, String enCasoError){
         String aux=num.toString();
         aux=aux.replaceAll(" ","");//quitar todos los espacios
-        if(!Funciones.esEnteroLargo(aux)){
+        if(!Fun.esEnteroLargo(aux)){
             return enCasoError;
         }else{
             return aux;
@@ -299,7 +299,7 @@ public class Funciones {
         if(valor==null){return null;}
         Object obj=valor;
         if(valor instanceof javax.swing.JTextField){obj=((javax.swing.JTextField)valor).getText();}
-        if(!Funciones.esNumero(obj)){return null;}
+        if(!Fun.esNumero(obj)){return null;}
         return Double.parseDouble(obj.toString());
     }
 

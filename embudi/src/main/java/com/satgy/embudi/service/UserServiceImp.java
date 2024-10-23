@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class UserServiceImp implements UserServiceI{
+public class UserServiceImp implements UserServiceI {
 
     private static final Logger log = LoggerFactory.getLogger(UserServiceImp.class);
     @Autowired

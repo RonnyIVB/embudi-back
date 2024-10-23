@@ -2,8 +2,7 @@ package com.satgy.embudi.controller;
 
 import com.satgy.embudi.dto.AuthResponseDto;
 import com.satgy.embudi.dto.Login;
-import com.satgy.embudi.general.Email;
-import com.satgy.embudi.general.Funciones;
+import com.satgy.embudi.general.Fun;
 import com.satgy.embudi.general.Str;
 import com.satgy.embudi.model.User;
 import com.satgy.embudi.model.UserPassword;
@@ -19,7 +18,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,11 +61,11 @@ public class UserPasswordController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signUp(@RequestBody Login login) {
+    public ResponseEntity<?> signUp(@RequestBody Login login) {
         if (Str.esNulo(login.getEmail()))
-            return Funciones.getResponse("Error en correo", "Por favor ingresa el correo", HttpStatus.BAD_REQUEST);
+            return Fun.getResponse("Error en correo", "Por favor ingresa el correo", HttpStatus.BAD_REQUEST);
         else if (Str.esNulo(login.getPassword()))
-            return Funciones.getResponse("Error en contraseña", "Por favor ingresa la contraseña", HttpStatus.BAD_REQUEST);
+            return Fun.getResponse("Error en contraseña", "Por favor ingresa la contraseña", HttpStatus.BAD_REQUEST);
         else {
             // check if the user exists
             List<UserPassword> ucList = userPasswordService.findByEmail(login.getEmail());
@@ -78,7 +76,7 @@ public class UserPasswordController {
                 //new Email().sendEmail(login.getEmail(), "Welcome to Embudi", "You are sign up on Embudi");
                 return new ResponseEntity<>(up.getUser(), HttpStatus.CREATED);
             } else {
-                return Funciones.getResponse("Cambiar el correo", "El correo ya existe", HttpStatus.BAD_REQUEST);
+                return Fun.getResponse("Cambiar el correo", "El correo ya existe", HttpStatus.BAD_REQUEST);
             }
         }
     }

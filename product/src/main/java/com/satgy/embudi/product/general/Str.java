@@ -1,6 +1,6 @@
-package com.satgy.embudi.general;
+package com.satgy.embudi.product.general;
 
-import com.satgy.embudi.dto.Currency;
+import com.satgy.embudi.product.dto.Currency;
 
 public class Str {
 

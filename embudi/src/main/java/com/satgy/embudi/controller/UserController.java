@@ -1,6 +1,5 @@
 package com.satgy.embudi.controller;
 
-import com.satgy.embudi.general.Funciones;
 import com.satgy.embudi.model.User;
 import com.satgy.embudi.service.UserServiceI;
 import jakarta.validation.Valid;

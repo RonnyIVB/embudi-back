@@ -1,5 +1,6 @@
 package com.satgy.embudi.product.model;
 
+import com.satgy.embudi.product.dto.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -22,6 +23,10 @@ public class Product implements Serializable {
     @Column(name = "productid")
     private Long productId;
 
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "status", nullable = false)
+    private ProductStatus status;
+
     @ManyToOne
     @JoinColumn(name = "cityid", nullable = true, referencedColumnName = "cityid", foreignKey=@ForeignKey(name = "FK_Product_City"))
     private City city;
@@ -29,6 +34,9 @@ public class Product implements Serializable {
     @NotNull(message = "Por favor define el usuario que agrega el producto")
     @Column(name = "userid", nullable = false)
     private Long userId; // User in another microservice
+
+    @Transient
+    private User user;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "operation", nullable = false)
@@ -101,7 +109,7 @@ public class Product implements Serializable {
     private BigDecimal publicPrice; // precio al público para mostrar
 
     @NotNull(message = "Especifica el precio al público")
-    @Column(name = "publicprice", nullable = false, precision = 20, scale = 2)
+    @Column(name = "minprice", nullable = false, precision = 20, scale = 2)
     private BigDecimal minPrice; // precio mínimo de venta, oculto
 
     @Size(max = 50, message = "El sector debe tener hasta 50 caracteres")
