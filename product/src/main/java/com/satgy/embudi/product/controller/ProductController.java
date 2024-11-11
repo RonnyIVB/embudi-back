@@ -1,5 +1,6 @@
 package com.satgy.embudi.product.controller;
 
+import com.satgy.embudi.product.dto.ProductAllData;
 import com.satgy.embudi.product.general.CustomFilter;
 import com.satgy.embudi.product.general.CustomResponse;
 import com.satgy.embudi.product.general.Fun;
@@ -42,6 +43,13 @@ public class ProductController {
                 .orElseGet(()->ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/alldata/{id}")
+    public ResponseEntity<ProductAllData> getAllDataById(@PathVariable("id") Long productId){
+        return service.getAllDataById(productId)
+                .map(ResponseEntity::ok)
+                .orElseGet(()->ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody Product product) {
         Product newProduct;
@@ -57,13 +65,13 @@ public class ProductController {
     public ResponseEntity<Product> update(@Valid @RequestBody Product product) {
         Optional<Product> ou = service.findById(product.getProductId());
         return ou.map(u ->
-                        ResponseEntity.ok(service.update(product)))
+                    ResponseEntity.ok(service.update(product)))
                 .orElseGet(()->ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Product> delete(@PathVariable("id") Long productoId) {
-        return (ResponseEntity<Product>) service.findById(productoId)
+        return service.findById(productoId)
                 .map(i -> {
                     service.delete(i.getProductId());
                     return ResponseEntity.ok(i);

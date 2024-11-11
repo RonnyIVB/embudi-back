@@ -97,7 +97,7 @@ public class Product implements Serializable {
     @Column(name = "bedrooms", nullable = true)
     private Short bedrooms;
 
-    @Column(name = "parkingSpots", nullable = true)
+    @Column(name = "parkingspots", nullable = true)
     private Short parkingSpots; // garages
 
     @Size(max = 30, message = "Las coordenadas ni pueden tener más de 30 caracteres")

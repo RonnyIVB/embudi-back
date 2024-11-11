@@ -10,4 +10,7 @@ public interface UserClientRest {
 
     @GetMapping("/api/user/uuid/{uuid}")
     public User findByUuid(@PathVariable("uuid") String uuid);
+
+    @GetMapping("/api/user/myself/{id}")
+    public User findById(@PathVariable("id") Long uuid);
 }

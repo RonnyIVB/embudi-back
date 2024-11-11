@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface FileServiceI {
     public Optional<File> findById(Long id);
+    public Optional<File> findByProductResource(Long productResourceId);
     public Optional<File> findByName(String name);
     public File create(File country);
     public File update(File country);

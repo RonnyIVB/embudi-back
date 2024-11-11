@@ -41,4 +41,24 @@ public class File {
     @Column(name = "descripcion", nullable = true, length = 100)
     private String description;
 
+    public File(String name, String originalName, String type, long size) {
+        this.name = name;
+        this.originalName = originalName;
+        this.type = type;
+        this.size = size;
+    }
+
+    public String getUriOpen() {
+        return org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/file/openFile/")
+                .path(name)
+                .toUriString();
+    }
+
+    public String getUriDownload() {
+        return org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/file/downloadFile/")
+                .path(name)
+                .toUriString();
+    }
 }

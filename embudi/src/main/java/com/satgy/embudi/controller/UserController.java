@@ -27,12 +27,13 @@ public class UserController {
 //        return ResponseEntity.ok(service.findAll());
 //    }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<User> findById(@PathVariable("id") Long id) {
-//        return (ResponseEntity<User>) service.findById(id)
-//                .map(ResponseEntity::ok)
-//                .orElseGet(()->ResponseEntity.notFound().build());
-//    }
+    @GetMapping("/myself/{id}")
+    public ResponseEntity<User> findById(@PathVariable("id") Long id) {
+        // I use 'myself' because I want to use this only by de another MS.
+        return (ResponseEntity<User>) service.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(()->ResponseEntity.notFound().build());
+    }
 
     @GetMapping("/uuid/{uuid}")
     public ResponseEntity<User> findById(@PathVariable("uuid") String uuid) {

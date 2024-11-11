@@ -12,7 +12,7 @@ public class Par {
 
     public static final String SIGN_UP_URL = "/api/auth";
 
-    public static final String secuenciaArchivo = "secuenciaArchivo.15";
+    public static final String FILE_SEQUENCE = "fileSequence.15";
     public static final String localhost="localhost";
     public static final String localhost2="127.0.0.1";
 

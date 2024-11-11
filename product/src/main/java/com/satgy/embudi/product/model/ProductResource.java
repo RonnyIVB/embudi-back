@@ -1,5 +1,6 @@
 package com.satgy.embudi.product.model;
 
+import com.satgy.embudi.product.general.Str;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -24,7 +25,7 @@ public class ProductResource {
     private Product product;
 
     @NotNull(message = "Por favor ingresa el orden del recurso")
-    @Column(name = "order", nullable = false)
+    @Column(name = "\"order\"", nullable = false)
     private Short order;
 
     @NotNull(message = "Por favor ingresa el nombre del recurso")
@@ -43,5 +44,31 @@ public class ProductResource {
 
     @ManyToOne
     @JoinColumn(name = "fileid", nullable = true, referencedColumnName = "fileid", foreignKey=@ForeignKey(name = "FK_ProductResource_File"))
-    private File file;
+    private File file; // The resource could be a File or an URL
+
+    @Size(max = 250, message = "La dirección web o URL puede tener hasta 250 caracteres")
+    @Column(name = "url", nullable = true, length = 250)
+    private String url;
+
+    public String getEmbedUrl() {
+        if (Str.esNulo(url)) return null;
+        //https://www.youtube.com/watch?v=BXX8VfRcSQU
+        //https://youtube.com/embed/BXX8VfRcSQU?autoplay=0
+        //https://www.youtube.com/embed/lHVqoiG0CUU?si=nUDuDLJt6N0TRc8l
+        //https://www.youtube.com/watch?v=L9WzNaMzfbE&list=PLProgi9ktvitYN3yGd1dxcdF3e9adz1AN
+        if (url.contains("youtu") && url.contains("v=")) {
+            int i1 = url.indexOf("v=")+2;
+            int length = url.indexOf("&");
+            if (length == -1) length = url.length();
+            String code = url.substring(i1, length);
+            return "https://youtube.com/embed/" + code + "?autoplay=0";
+        } else if (url.contains("youtu") && url.contains("embed")) {
+            int i1 = url.indexOf("embed")+6;
+            int length = url.indexOf("?");
+            if (length == -1) length = url.length();
+            String code = url.substring(i1, length);
+            return "https://youtube.com/embed/" + code + "?autoplay=0";
+        }
+        return url;
+    }
 }
