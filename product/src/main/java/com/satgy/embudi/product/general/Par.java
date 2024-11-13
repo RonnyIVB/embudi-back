@@ -10,8 +10,6 @@ public class Par {
 
     public static String caracteresEspeciales=".,;:+-_*/'¡!\"·$%&/()=¿?\\ºª|@#~€¬`´^*[]{}¨Çç<>";
 
-    public static final String SIGN_UP_URL = "/api/auth";
-
     public static final String FILE_SEQUENCE = "fileSequence.15";
     public static final String localhost="localhost";
     public static final String localhost2="127.0.0.1";
@@ -34,12 +32,5 @@ public class Par {
     public static String getFormatoFecha () { return env.getProperty("formatoFecha"); }
     public static String getFormatoHora () { return env.getProperty("formatoHora"); }
 
-    public static String getDireccionCorreo () { return env.getProperty("direccionCorreo"); }
-    public static String getCorreoAutenticacion () { return env.getProperty("correoAutenticacion"); }
-    public static String getUsuarioCorreo () { return env.getProperty("usuarioCorreo"); }
-    public static String getClaveCorreo () { return env.getProperty("claveCorreo"); }
-    public static String getDireccionSMTP () { return env.getProperty("direccionSMTP"); }
-    public static String getPuertoSMTP () { return env.getProperty("puertoSMTP"); }
-    public static String getStarttls () { return env.getProperty("starttls"); }
 
 }

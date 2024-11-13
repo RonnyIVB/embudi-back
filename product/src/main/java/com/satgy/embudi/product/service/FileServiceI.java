@@ -9,7 +9,7 @@ public interface FileServiceI {
     public Optional<File> findById(Long id);
     public Optional<File> findByProductResource(Long productResourceId);
     public Optional<File> findByName(String name);
-    public File create(File country);
-    public File update(File country);
+    public File create(File file);
+    public File update(File file);
     public void delete(Long id);
 }

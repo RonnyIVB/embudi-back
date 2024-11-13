@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -56,9 +55,9 @@ public class FileController {
         String name = secuenciaService.getValueStr(Par.FILE_SEQUENCE) + extension;
         String fileName = fileStorageService.storeFile(file, name);
 
-        File File = new File(fileName, originalName, file.getContentType(), file.getSize());
+        File embudyFile = new File(fileName, originalName, file.getContentType(), file.getSize());
         secuenciaService.increase(Par.FILE_SEQUENCE);
-        return service.create(File);
+        return service.create(embudyFile);
     }
 
     @PostMapping("/uploadMultipleFiles")

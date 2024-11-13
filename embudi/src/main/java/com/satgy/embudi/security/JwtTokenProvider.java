@@ -7,6 +7,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -19,6 +20,12 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider implements AuthenticationEntryPoint {
 
+    @Value("${app.jwtExpirationToken}")
+    private Long jwtExpirationToken;
+
+    @Value("${app.jwtSign}")
+    private String jwtSign;
+
     /**
      * Token Generator by authentication
      * @param auth
@@ -27,13 +34,15 @@ public class JwtTokenProvider implements AuthenticationEntryPoint {
     public String tokenGenerate(Authentication auth) {
         String userName = auth.getName();
         Date currentDate = new Date();
-        Date expirationToken = new Date(currentDate.getTime() + Par.getJwtExpirationToken());//+ 300000);
+        //Date expirationToken = new Date(currentDate.getTime() + Par.getJwtExpirationToken());//+ 300000);
+        Date expirationToken = new Date(currentDate.getTime() + jwtExpirationToken);//+ 300000);
         // generate token, return a String
         return Jwts.builder()
                 .setSubject(userName)
                 .setIssuedAt(currentDate)
                 .setExpiration(expirationToken)
-                .signWith(SignatureAlgorithm.HS512, Par.getJwtSign()).compact();
+                //.signWith(SignatureAlgorithm.HS512, Par.getJwtSign()).compact();
+                .signWith(SignatureAlgorithm.HS512, jwtSign).compact();
     }
 
     /**
@@ -42,7 +51,8 @@ public class JwtTokenProvider implements AuthenticationEntryPoint {
      * @return name or email or subject. The identity
      */
     public String getUserNameOfJwt(String token) {
-        Claims claims = Jwts.parser().setSigningKey(Par.getJwtSign()).parseClaimsJws(token).getBody();
+        //Claims claims = Jwts.parser().setSigningKey(Par.getJwtSign()).parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parser().setSigningKey(jwtSign).parseClaimsJws(token).getBody();
         return claims.getSubject();
     }
 
@@ -53,7 +63,8 @@ public class JwtTokenProvider implements AuthenticationEntryPoint {
      */
     public Boolean tokenValidate(String token) {
         try {
-            Jwts.parser().setSigningKey(Par.getJwtSign()).parseClaimsJws(token);
+            //Jwts.parser().setSigningKey(Par.getJwtSign()).parseClaimsJws(token);
+            Jwts.parser().setSigningKey(jwtSign).parseClaimsJws(token);
             return true;
         } catch(Exception e) {
             throw new AuthenticationCredentialsNotFoundException("False o expired token");

@@ -1,6 +1,8 @@
 package com.satgy.embudi.general;
 
-/** * @author Ronny */
+/**
+ * @author Ronny
+ */
 
 import java.util.Date;
 import java.util.Properties;
@@ -21,6 +23,7 @@ import javax.mail.internet.MimeMultipart;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 
 public class Email
@@ -30,21 +33,42 @@ public class Email
 
     private static final Logger log = LoggerFactory.getLogger(Email.class);
 
+    @Value("${app.emailAddress}")
+    private String emailAddress;
+    
+    @Value("${app.emailUser}")
+    private String emailUser;
+
+    @Value("${app.emailPassword}")
+    private String emailPassword;
+
+    @Value("${app.SMTPAddress}")
+    private String smtpAddress;
+
+    @Value("${app.SMTPPort}")
+    private String smtpPort;
+
+    @Value("${app.emailStartTLS}")
+    private String startTLS;
+
+    @Value("${app.emailAuthentication}")
+    private String emailAuthentication;
+    
     public void testCorreo(final String to) {
-        Email.SMTP_AUTH_USER = Par.getUsuarioCorreo();
-        Email.SMTP_AUTH_PWD = Par.getClaveCorreo();
+        Email.SMTP_AUTH_USER = emailUser;
+        Email.SMTP_AUTH_PWD = emailPassword;
 
         final Properties properties = new Properties();
-        properties.put("mail.smtp.host", Par.getDireccionSMTP());
-        properties.put("mail.smtp.port", Par.getPuertoSMTP());
-        properties.put("mail.smtp.starttls.enable", Par.getStarttls());
-        properties.put("mail.smtp.starttls.required", Par.getStarttls());
-        properties.put("mail.smtp.ssl.trust", Par.getDireccionSMTP());
+        properties.put("mail.smtp.host", smtpAddress);
+        properties.put("mail.smtp.port", smtpPort);
+        properties.put("mail.smtp.starttls.enable", startTLS);
+        properties.put("mail.smtp.starttls.required", startTLS);
+        properties.put("mail.smtp.ssl.trust", smtpAddress);
         properties.put("mail.smtp.ssl.protocols", "TLSv1.2");
         properties.setProperty("mail.debug", "false");
 
         Session session;
-        if (Par.getCorreoAutenticacion().equals("true")) {
+        if (emailAuthentication.equals("true")) {
             properties.put("mail.smtp.auth", "true");
             final Authenticator autenticador = new SMTPAuthenticator();
             session = Session.getInstance(properties, autenticador);
@@ -54,7 +78,7 @@ public class Email
         }
         try {
             final MimeMessage message = new MimeMessage(session);
-            message.setFrom((Address)new InternetAddress(Par.getDireccionCorreo()));
+            message.setFrom((Address)new InternetAddress(emailAddress));
             //message.setRecipient(Message.RecipientType.TO, (Address)new InternetAddress(to));
             message.addRecipients(Message.RecipientType.TO,InternetAddress.parse(to));
             message.setSubject("Electronicos Test Correo");
@@ -75,18 +99,18 @@ public class Email
 
 
     public String sendEmail(final String to, final String asunto, final String mensaje) {
-        Email.SMTP_AUTH_USER = Par.getUsuarioCorreo();
-        Email.SMTP_AUTH_PWD = Par.getClaveCorreo();
+        Email.SMTP_AUTH_USER = emailUser;
+        Email.SMTP_AUTH_PWD = emailPassword;
 
         final Properties properties = new Properties();
-        properties.put("mail.smtp.host", Par.getDireccionSMTP());
-        properties.put("mail.smtp.port", Par.getPuertoSMTP());
-        properties.put("mail.smtp.starttls.enable", Par.getStarttls());
-        properties.put("mail.smtp.ssl.trust", Par.getDireccionSMTP());
+        properties.put("mail.smtp.host", smtpAddress);
+        properties.put("mail.smtp.port", smtpPort);
+        properties.put("mail.smtp.starttls.enable", startTLS);
+        properties.put("mail.smtp.ssl.trust", smtpAddress);
         properties.setProperty("mail.debug", "false");
 
         Session session;
-        if (Par.getCorreoAutenticacion().equals("true")) {
+        if (emailAuthentication.equals("true")) {
             properties.put("mail.smtp.auth", "true");
             final Authenticator autenticador = new SMTPAuthenticator();
             session = Session.getInstance(properties, autenticador);
@@ -96,7 +120,7 @@ public class Email
         }
         try {
             final MimeMessage message = new MimeMessage(session);
-            message.setFrom((Address)new InternetAddress(Par.getDireccionCorreo()));
+            message.setFrom((Address)new InternetAddress(emailAddress));
             //message.setRecipient(Message.RecipientType.TO, (Address)new InternetAddress(to));
             message.addRecipients(Message.RecipientType.TO,InternetAddress.parse(to));
             message.setSubject(asunto);
@@ -108,15 +132,15 @@ public class Email
             Thread.currentThread().setContextClassLoader( getClass().getClassLoader() );
             message.setContent(multipart);
 
-            String datos = "usuario: " + Par.getUsuarioCorreo()
-                    + " | contraseña: " + Par.getClaveCorreo()
-                    + " | dirección: " + Par.getDireccionCorreo()
+            String datos = "usuario: " + emailUser
+                    + " | contraseña: " + emailPassword
+                    + " | dirección: " + emailAddress
                     + " | to: " + to
                     + " | asunto: " + asunto
                     + " | mensaje: " + mensaje
-                    + " | direcciónSMTP: " + Par.getDireccionSMTP()
-                    + " | port: " +  Par.getPuertoSMTP()
-                    + " | startTLS: " + Par.getStarttls()
+                    + " | direcciónSMTP: " + smtpAddress
+                    + " | port: " +  smtpPort
+                    + " | startTLS: " + startTLS
                     ;
             System.out.println(datos);
             log.debug(datos);

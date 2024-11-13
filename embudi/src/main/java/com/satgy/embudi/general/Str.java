@@ -71,7 +71,7 @@ public class Str {
     }
 
     public static boolean tieneEspeciales(String cadena){
-        for(int i=0; i<Par.caracteresEspeciales.length(); i++) {
+        for (int i=0; i<Par.caracteresEspeciales.length(); i++) {
             if(cadena.contains(Par.caracteresEspeciales.substring(i, i+1))) {
                 return true;
             }

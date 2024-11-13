@@ -36,14 +36,14 @@ public class FileStorageService {
     /**
      *
      * @param file
-     * @param nombreNuevo un número secuencial que se asigna al archivo para asegurar que no se repitan los nombres
+     * @param newName un número secuencial que se asigna al archivo para asegurar que no se repitan los nombres
      * @return
      */
-    public String storeFile(MultipartFile file, String nombreNuevo) {
+    public String storeFile(MultipartFile file, String newName) {
         // Normalize file name
         String fileName;
-        if (nombreNuevo == null) fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        else fileName = nombreNuevo;
+        if (newName == null) fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        else fileName = newName;
         //String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
         try {
